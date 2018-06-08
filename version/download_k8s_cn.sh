@@ -24,7 +24,7 @@ docker login -u $username -p $password $store_repo
 for image in ${images[@]}
 do
 	docker pull ${store_repo_path}/${image}
-	docker tag ${store_repo_path}/${image} k8s.gcr.io/${image}
+	docker tag ${store_repo_path}/${image} gcr.io/google_containers/${image}
 	docker rmi ${store_repo_path}/${image}
 done
  
