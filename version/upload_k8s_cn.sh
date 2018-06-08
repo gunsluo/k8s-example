@@ -30,5 +30,11 @@ do
 	docker rmi k8s.gcr.io/${image}
 	docker rmi ${store_repo_path}/${image}
 done
+
+docker pull quay.io/coreos/flannel:v0.10.0-amd64
+docker tag quay.io/coreos/flannel:v0.10.0-amd64 ${store_repo_path}/flannel:v0.10.0-amd64
+docker push ${store_repo_path}/flannel:v0.10.0-amd64
+docker rmi quay.io/coreos/flannel:v0.10.0-amd64
+docker rmi ${store_repo_path}/flannel:v0.10.0-amd64
  
 unset ARCH mversion nversion images username password store_repo store_repo_path

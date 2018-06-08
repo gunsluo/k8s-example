@@ -27,5 +27,9 @@ do
 	docker tag ${store_repo_path}/${image} gcr.io/google_containers/${image}
 	docker rmi ${store_repo_path}/${image}
 done
+
+docker pull ${store_repo_path}/flannel:v0.10.0-amd64
+docker tag ${store_repo_path}/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
+docker rmi ${store_repo_path}/flannel:v0.10.0-amd64
  
 unset ARCH mversion nversion images username password store_repo store_repo_path
