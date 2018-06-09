@@ -11,7 +11,7 @@ store_repo_path=r.xiaozhou.net/kubernetes
  
 
 images=(${repo}/kube-apiserver-${ARCH}:${mversion} \
-	${repo}/a/b/kube-controller-manager-${ARCH}:${mversion} \
+	${repo}/kube-controller-manager-${ARCH}:${mversion} \
 	${repo}/kube-scheduler-${ARCH}:${mversion} \
 	${repo}/kube-proxy-${ARCH}:${mversion} \
 	${repo}/etcd-${ARCH}:3.1.12 \
