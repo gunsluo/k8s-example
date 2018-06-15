@@ -18,6 +18,7 @@ images=(${repo}/kube-apiserver-${ARCH}:${mversion} \
 	${repo}/k8s-dns-sidecar-${ARCH}:${nversion} \
 	${repo}/k8s-dns-kube-dns-${ARCH}:${nversion} \
 	${repo}/k8s-dns-dnsmasq-nanny-${ARCH}:${nversion} \
+	${repo}/kubernetes-dashboard-${ARCH}:v1.8.3 \
     quay.io/coreos/flannel:v0.10.0-amd64 \
 	)
 
