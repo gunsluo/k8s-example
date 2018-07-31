@@ -35,7 +35,7 @@ spec:
         - "--listen=http://0.0.0.0:5555"
         - "--client-id=example-app"
         - "--client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0"
-        - "--redirect-uri=http://localhost:5555/callback"
+        - "--redirect-uri=http://demo-login.sso:5555/callback"
         ports:
         - containerPort: 5555
           name: demo-login
