@@ -5,7 +5,7 @@ metadata:
   namespace: sso
 data:
   sso-config: |
-    issuer: http://dex.sso:5556/dex
+    issuer: http://dex.sso/dex
     storage:
       type: postgres
       config:
@@ -36,12 +36,14 @@ data:
     - id: example-app
       redirectURIs:
       - 'http://127.0.0.1:5555/callback'
+      - 'http://demo-login.sso/callback'
       name: 'Example App'
       secret: ZXhhbXBsZS1hcHAtc2VjcmV0
     - id: access-control
       redirectURIs:
       - http://localhost:8000/sso/callback
       - http://localhost:7001/oauth2
+      - http://ladon.access-control/oauth2
       name: 'access-control'
       secret: DzXZxyDObSpsnR7qLqQ4p1LEVoIiE49e
 

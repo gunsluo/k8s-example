@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - name: demo-login
-    port: 5555
+    port: 80 
     targetPort: 5555
   selector:
     app: demo-login
@@ -31,11 +31,11 @@ spec:
         name: demo-login
         command:
         - /usr/local/bin/dex-login
-        - "--issuer=http://dex.sso:5556/dex"
+        - "--issuer=http://dex.sso/dex"
         - "--listen=http://0.0.0.0:5555"
         - "--client-id=example-app"
         - "--client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0"
-        - "--redirect-uri=http://demo-login.sso:5555/callback"
+        - "--redirect-uri=http://demo-login.sso/callback"
         ports:
         - containerPort: 5555
           name: demo-login
