@@ -9,7 +9,7 @@ images=(gcr.io/google_containers/defaultbackend:1.4 \
     quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.17.1 \
 	)
 
-#docker login -u $username -p $password $store_repo
+docker login -u $username -p $password $store_repo
 
 for url in ${images[@]}
 do 
