@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-login
+  namespace: sso
+  labels:
+    service: demo-login
+spec:
+  ports:
+  - name: demo-login
+    port: 5555
+    targetPort: 5555
+  selector:
+    app: demo-login
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: demo-login
+  namespace: sso
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-login
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: registry.gitlab.com/target-digital-transformation/sso/app-login
+        name: demo-login
+        command:
+        - /usr/local/bin/dex-login
+        - "--issuer=http://dex.sso:5556/dex"
+        - "--listen=http://0.0.0.0:5555"
+        - "--client-id=example-app"
+        - "--client-secret=ZXhhbXBsZS1hcHAtc2VjcmV0"
+        - "--redirect-uri=http://localhost:5555/callback"
+        ports:
+        - containerPort: 5555
+          name: demo-login
+      imagePullSecrets:
+      - name: registry.gitlab.com
