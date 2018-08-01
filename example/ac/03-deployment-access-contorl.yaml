@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ladon
+  namespace: access-control
+  labels:
+    service: ladon
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 7001
+  selector:
+    app: ladon
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ladon
+  namespace: access-control
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ladon
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: registry.gitlab.com
+      containers:
+      - name: ladon
+        image: registry.gitlab.com/target-digital-transformation/access-control/master
+        imagePullPolicy: Always
+        env:
+        - name: TARGET_AC_ADMIN
+          value: CiQwOGE4Njg0Yi1kYjg4LTRiNzMtOTBhOS0zY2QxNjYxZjU0NjYSBWxvY2Fs
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DATABASE_SERVER
+          value: "postgres.db"
+        - name: DATABASE
+          value: "ladon"
+        command:
+         - "/usr/local/bin/ac-serve"
+         - "serve"
+         - "--address=:7001"
+         - "--dsn=postgres://$(DB_USER):$(DB_PASSWORD)@$(DATABASE_SERVER):5432/$(DATABASE)?sslmode=disable"
+         - "--view-dir=/go/views/"
+         - "--oidc=http://dex.sso/dex"
+         - "--client-id=access-control"
+         - "--redirect-uri=http://ladon.access-control/oauth2"
+         - "--client-secret=DzXZxyDObSpsnR7qLqQ4p1LEVoIiE49e"
+         - "--enable-builtin-console"

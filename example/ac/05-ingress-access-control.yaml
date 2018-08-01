@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ladon
+  namespace: access-control
+spec:
+  rules:
+  - host: ladon.access-control
+    http:
+      paths:
+      - backend:
+          serviceName: ladon
+          servicePort: 80
+        path: /
