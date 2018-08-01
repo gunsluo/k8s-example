@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dex
+  namespace: sso
+spec:
+  rules:
+  - host: dex.sso
+    http:
+      paths:
+      - backend:
+          serviceName: dex
+          servicePort: 80
+        path: /

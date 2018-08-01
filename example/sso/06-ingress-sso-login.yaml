@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-login
+  namespace: sso
+spec:
+  rules:
+  - host: demo-login.sso
+    http:
+      paths:
+      - backend:
+          serviceName: demo-login
+          servicePort: 80
+        path: /
