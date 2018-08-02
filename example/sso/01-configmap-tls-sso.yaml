@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sso-config
+  namespace: sso
+data:
+  sso-config: |
+    issuer: https://dex.sso/dex
+    storage:
+      type: postgres
+      config:
+        host: postgres.db
+        database: sso
+        user: postgres
+        password: "password"
+        ssl:
+          mode: disable
+
+    web:
+      http: 0.0.0.0:5556
+      allowedOrigins: ["*"]
+
+    grpc:
+      addr: 0.0.0.0:5557
+
+    frontend:
+      Theme: meera
+      Issuer: Meera DX
+
+    connectors:
+    - type: mockCallback
+      id: mock
+      name: Example
+
+    staticClients:
+    - id: example-app
+      redirectURIs:
+      - 'http://127.0.0.1:5555/callback'
+      - 'https://demo-login.sso/callback'
+      name: 'Example App'
+      secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+    - id: access-control
+      redirectURIs:
+      - http://localhost:8000/sso/callback
+      - http://localhost:7001/oauth2
+      - https://ladon.access-control/oauth2
+      name: 'access-control'
+      secret: DzXZxyDObSpsnR7qLqQ4p1LEVoIiE49e
+
+    staticPasswords:
+    - email: "admin@example.com"
+      # bcrypt hash of the string "password"
+      hash: "$2a$10$2b2cU8CPhOTaGrs1HRQuAueS7JTT5ZHsHSzYiFPm1leZck7Mc8T4W"
+      username: "admin"
+      userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
+    - email: "regulator@yopmail.com"
+      hash: "$2a$10$FpFm1RaAYh7nXbp0eP5dEurUo24mczj0ka24O9ZcwhlmB1xI5463e"
+      username: "Regulator"
+      userID: "regulator"
+    - email: "operator@meerawork.com"
+      hash: "$2y$10$6qARDg8lJcHhBhmTkvm0Z.MlA5e83wHb5ohpnfvz/HfFWaPbBcm6a"
+      username: "Operator"
+      userID: "operator"
+
+    oauth2:
+      responseTypes: ["code", "token", "id_token"]
+      skipApprovalScreen: true
+
+    enablePasswordDB: true
+    enableSignup: true
+    mailManager:
+      smtpAddr: "smtp.gmail.com:587"
+      sender: "target.dt.devops@gmail.com"
+      password: "r$eT6vj5n9zH4xGm7"
+      poolSize: 20
+
+    #accessControl:
+    #  enable: true
+    #  grpcAddr: "ac-serve:7001"
+
+    #cadre:
+    #  enable: true
+    #  addr: "http://cadre-graphql.test-cadre-01:9301"
+
