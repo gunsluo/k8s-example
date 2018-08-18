@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mq
+  namespace: rabbit
+  labels:
+    svc: mq
+spec:
+  ports:
+  - port: 5672
+    targetPort: 5672
+    protocol: TCP
+    name: tcp
+  - port: 15672
+    targetPort: 15672
+    protocol: TCP
+    name: http
+  - port: 61613
+    targetPort: 61613
+    protocol: TCP
+    name: mq
+  selector:
+    svc: mq
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mq
+  namespace: rabbit
+spec:
+  selector:
+    matchLabels:
+      svc: mq # has to match .spec.template.metadata.labels
+  serviceName: "mq"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        svc: mq # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mq
+        image: itzg/rabbitmq-stomp
+        ports:
+        - containerPort: 5672
+          name: tcp
+          protocol: TCP
+        - containerPort: 15672
+          name: http
+          protocol: TCP
+        - containerPort: 61613
+          name: mq
+          protocol: TCP
+        volumeMounts:
+        - name: rabbit-mq-pvc
+          mountPath: /data/rabbit
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbit-mq-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "local-storage"
+      resources:
+        requests:
+          storage: 2Gi
