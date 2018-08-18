@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # This service is meant to be used by clients of the database. It exposes a ClusterIP that will
+  # automatically load balance connections to the different database pods.
+  name: sms-grpc
+  namespace: cadre
+  labels:
+    app: sms-grpc
+spec:
+  ports:
+  - port: 9102
+    targetPort: 9102
+    name: grpc
+  selector:
+    app: sms-grpc
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: sms-grpc
+  namespace: cadre
+  labels:
+    app: sms-grpc
+    project: cadre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sms-grpc
+  template:
+    metadata:
+      labels:
+        app: sms-grpc
+    spec:
+      containers:
+      - name: sms-grpc
+        image: registry.gitlab.com/tesgo/sms/master
+        imagePullPolicy: Always
+        env:
+        - name: DB_USER
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DATABASE_SERVER
+          value: "postgres.db"
+        - name: DATABASE
+          value: "sms"
+        command: 
+        - "sms-serve"
+        - "sms"
+        - "grpc"
+        - "--omantel-pub=tos_webser"
+        - "--omantel-key=Targetweb@789"
+        - "--redis=redis.db:6379"
+        - "--dsn=postgres://$(DB_USER):$(DB_PASSWORD)@$(DATABASE_SERVER):5432/$(DATABASE)?sslmode=disable"
+        ports:
+        - containerPort: 9102
+          name: grpc
+      imagePullSecrets:
+      - name: registry.gitlab.com

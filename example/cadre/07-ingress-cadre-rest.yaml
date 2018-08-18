@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rest
+  namespace: cadre
+spec:
+  rules:
+  - host: rest.cadre
+    http:
+      paths:
+      - backend:
+          serviceName: rest
+          servicePort: 9201
+        path: /

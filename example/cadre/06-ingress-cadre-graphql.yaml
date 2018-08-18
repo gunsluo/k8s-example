@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: graphql
+  namespace: cadre
+spec:
+  rules:
+  - host: graphql.cadre
+    http:
+      paths:
+      - backend:
+          serviceName: graphql
+          servicePort: 9301
+        path: /
