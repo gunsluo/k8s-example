@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc
+  namespace: demo
+  labels:
+    service: grpc
+spec:
+  ports:
+  - name: http
+    protocol: TCP
+    port: 3264
+    targetPort: 3264
+  selector:
+    app: grpc
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grpc
+  namespace: demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: grpc
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: grpc
+        image: jerrylou/grpc-serve
+        imagePullPolicy: Always
+        command:
+         - "/usr/local/bin/grpc-serve"
+         - "--address=:3264"
+         - "--key-file=/etc/ses/tls.key"
+         - "--cert-file=/etc/ses/tls.crt"
+        ports:
+        - containerPort: 3264
+          protocol: TCP
+          name: grpc
+        volumeMounts:
+        - name: tls
+          mountPath: "/etc/ses"
+          readOnly: true
+      volumes:
+      - name: tls
+        secret:
+          secretName: grpc-secret

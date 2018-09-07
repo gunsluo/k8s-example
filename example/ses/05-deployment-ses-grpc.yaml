@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ses-grpc
+  namespace: ses
+  labels:
+    service: ses-grpc
+spec:
+  ports:
+  - name: http
+    port: 6000
+    targetPort: 6000
+  selector:
+    app: ses-grpc
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ses-grpc
+  namespace: ses
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ses-grpc
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: registry.gitlab.com/target-digital-transformation/ses/master
+        name: ses-grpc
+        env:
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DATABASE_SERVER
+          value: "mongodb.db"
+        - name: RABBIT_URL
+          value: "mq.rabbit"
+        command:
+        - "ses-serve"
+        - "grpc"
+        - "--address=:6000"
+        - "--mq-url=amqp://guest:guest@$(RABBIT_URL):5672/"
+        - "--mongo-url=mongodb://$(DB_USER):$(DB_PASSWORD)@$(DATABASE_SERVER):27017"
+        - "--used-agents=aws"
+        - "--support-agent-servers=aws"
+        - "--agent-exchange=ses.agent"
+        volumeMounts:
+        ports:
+        - containerPort: 6000
+          name: grpc
+      imagePullSecrets:
+      - name: registry.gitlab.com

@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ses-agent
+  namespace: ses
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ses-agent
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: registry.gitlab.com/target-digital-transformation/ses/master
+        name: ses-agent
+        env:
+        - name: RABBIT_URL
+          value: "mq.rabbit"
+        - name: AWS_REGION
+          value: "us-west-2"
+        - name: AWS_ACCESS_KEY_ID
+          value: "AKIAJTQBAJSZA34WUICA"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "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"
+        command:
+        - "ses-agent"
+        - "agent"
+        - "--mq-url=amqp://guest:guest@$(RABBIT_URL):5672/"
+        - "--used-agent=aws"
+        - "--agent-exchange=ses.agent"
+        - "--status-exchange=ses.status"
+      imagePullSecrets:
+      - name: registry.gitlab.com

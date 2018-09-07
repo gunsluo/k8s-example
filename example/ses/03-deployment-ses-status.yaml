@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ses-status
+  namespace: ses
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ses-status
+    spec:
+      restartPolicy: Always
+      containers:
+      - image: registry.gitlab.com/target-digital-transformation/ses/master
+        name: ses-status
+        env:
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: "password"
+        - name: DATABASE_SERVER
+          value: "mongodb.db"
+        - name: RABBIT_URL
+          value: "mq.rabbit"
+        command:
+        - "ses-agent"
+        - "status"
+        - "--mq-url=amqp://guest:guest@$(RABBIT_URL):5672/"
+        - "--mongo-url=mongodb://$(DB_USER):$(DB_PASSWORD)@$(DATABASE_SERVER):27017"
+        - "--from-exchange=ses.status"
+      imagePullSecrets:
+      - name: registry.gitlab.com
